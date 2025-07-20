@@ -68,3 +68,47 @@ create table if not exists question_bank_question
     updateTime     datetime default CURRENT_TIMESTAMP not null on update CURRENT_TIMESTAMP comment '更新时间',
     UNIQUE (questionBankId, questionId)
 ) comment '题库题目' collate = utf8mb4_unicode_ci;
+
+--用户个人主页资料修改
+ALTER TABLE user
+    ADD phoneNumber        VARCHAR(20) COMMENT '手机号',
+    ADD email              VARCHAR(256) COMMENT '邮箱',
+    ADD grade              VARCHAR(50) COMMENT '年级',
+    ADD workExperience     VARCHAR(512) COMMENT '工作经验',
+    ADD expertiseDirection VARCHAR(512) COMMENT '擅长方向';
+
+-- 题目点赞表（硬删除）
+create table if not exists question_thumb
+(
+    id         bigint auto_increment comment 'id' primary key,
+    questionId bigint                             not null comment '题目 id',
+    userId     bigint                             not null comment '创建用户 id',
+    createTime datetime default CURRENT_TIMESTAMP not null comment '创建时间',
+    updateTime datetime default CURRENT_TIMESTAMP not null on update CURRENT_TIMESTAMP comment '更新时间',
+    UNIQUE (questionId, userId) comment '确保用户不会重复点赞'
+    ) comment '题目点赞' collate = utf8mb4_unicode_ci;
+
+-- 题目评论表
+create table if not exists question_comment
+(
+    id         bigint auto_increment comment 'id' primary key,
+    questionId bigint                             not null comment '题目 id',
+    userId     bigint                             not null comment '创建用户 id',
+    content    text                               not null comment '评论内容',
+    createTime datetime default CURRENT_TIMESTAMP not null comment '创建时间',
+    updateTime datetime default CURRENT_TIMESTAMP not null on update CURRENT_TIMESTAMP comment '更新时间',
+    isDelete   tinyint  default 0                 not null comment '是否删除',
+    index idx_questionId (questionId),
+    index idx_userId (userId)
+    ) comment '题目评论' collate = utf8mb4_unicode_ci;
+
+-- 题目收藏表（硬删除）
+create table if not exists question_favourite
+(
+    id         bigint auto_increment comment 'id' primary key,
+    questionId bigint                             not null comment '题目 id',
+    userId     bigint                             not null comment '创建用户 id',
+    createTime datetime default CURRENT_TIMESTAMP not null comment '创建时间',
+    updateTime datetime default CURRENT_TIMESTAMP not null on update CURRENT_TIMESTAMP comment '更新时间',
+    UNIQUE (questionId, userId) comment '确保用户不会重复收藏'
+    ) comment '题目收藏' collate = utf8mb4_unicode_ci;
