@@ -145,7 +145,9 @@ public abstract class JavaCodeSandboxTemplate implements CodeSandbox {
                 executeCodeResponse.setStatus(3);
                 break;
             }
-            outputList.add(executeMessage.getMessage());
+            String message = executeMessage.getMessage();
+            message = message.trim();
+            outputList.add(message);
             Long time = executeMessage.getTime();
             if (time != null) {
                 maxTime = Math.max(maxTime, time);
